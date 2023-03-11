@@ -1,12 +1,13 @@
-import { Body, Controller, Get, HttpStatus, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Query, UseGuards } from '@nestjs/common';
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { CurrentUser } from 'src/decorators';
 import { Serialize } from 'src/interceptors';
 import { UserDto } from 'src/users/dtos';
 import { AuthService } from './auth.service';
-import { SignupUserDto } from './dtos';
+import { SignupUserDto, SigninUserDto, Tokens } from './dtos';
 import { LocalAuthGuard, GoogleAuthGuard, GoogleTokenAuthGuard, FacebookAuthGuard, FacebookTokenAuthGuard } from './guards';
-import { Tokens } from './types';
 
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
     constructor(
@@ -14,14 +15,29 @@ export class AuthController {
     ) {}
     
     @Post('signup')
+    @ApiCreatedResponse({
+        description: 'User Signup',
+        type: UserDto,
+    })
+    @ApiBadRequestResponse({
+        description: 'Payload incorrect'
+    })
     @Serialize(UserDto)
     signupUser(@Body() payload: SignupUserDto) {
         return this.authService.signup(payload);
     }
 
-    @UseGuards(LocalAuthGuard)
+    
     @Post('signin')
-    signinUser(@CurrentUser() user): Promise<Tokens> {
+    @ApiCreatedResponse({
+        description: 'User Signin',
+        type: Tokens,
+    })
+    @ApiBadRequestResponse({
+        description: 'Payload incorrect'
+    })
+    @UseGuards(LocalAuthGuard)
+    signinUser(@CurrentUser() user, @Body() payload: SigninUserDto): Promise<Tokens> {
         return this.authService.login(user);
     }
 
@@ -50,14 +66,28 @@ export class AuthController {
     }
 
     @Get('facebook')
+    @ApiOkResponse({
+        description: 'User Signed in',
+        type: Tokens,
+    })
+    @ApiUnauthorizedResponse({
+        description: 'Unvalid access token'
+    })
     @UseGuards(FacebookTokenAuthGuard)
-    async facebookTokenLogin(@CurrentUser() user): Promise<Tokens>  {
+    async facebookTokenLogin(@CurrentUser() user, @Query('access_token') access_token: string): Promise<Tokens>  {
         return this.authService.login(user);
     }
 
     @Get('google')
+    @ApiOkResponse({
+        description: 'User Signed in',
+        type: Tokens,
+    })
+    @ApiUnauthorizedResponse({
+        description: 'Unvalid access token'
+    })
     @UseGuards(GoogleTokenAuthGuard)
-    async googleTokenLogin(@CurrentUser() user): Promise<Tokens>  {
+    async googleTokenLogin(@CurrentUser() user, @Query('access_token') access_token: string): Promise<Tokens>  {
         return this.authService.login(user);
     }
 }

@@ -3,11 +3,10 @@ import { UsersService } from 'src/users/users.service';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
 import { CreateUserDto } from 'src/users/dtos';
-import { SignupUserDto } from './dtos';
+import { SignupUserDto, Tokens } from './dtos';
 import { User } from 'src/users/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { UserSource } from 'src/users/enums';
-import { Tokens } from './types';
 
 const scrypt = promisify(_scrypt);
 
