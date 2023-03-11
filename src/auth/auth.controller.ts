@@ -1,5 +1,7 @@
 import { Body, Controller, Get, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { CurrentUser } from 'src/decorators';
+import { Serialize } from 'src/interceptors';
+import { UserDto } from 'src/users/dtos';
 import { AuthService } from './auth.service';
 import { SignupUserDto } from './dtos';
 import { LocalAuthGuard, GoogleAuthGuard, GoogleTokenAuthGuard, FacebookAuthGuard, FacebookTokenAuthGuard } from './guards';
@@ -10,8 +12,9 @@ export class AuthController {
     constructor(
         private readonly authService: AuthService,
     ) {}
-
+    
     @Post('signup')
+    @Serialize(UserDto)
     signupUser(@Body() payload: SignupUserDto) {
         return this.authService.signup(payload);
     }
