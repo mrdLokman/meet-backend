@@ -16,13 +16,14 @@ import { FacebookTokenStrategy, GoogleTokenStrategy, FacebookStrategy, GoogleStr
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: '1h',
+          expiresIn: '30d',
         }
       })
     }),
     PassportModule.register({ defaultStrategy: 'facebook' })
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, FacebookStrategy, GoogleStrategy, GoogleTokenStrategy, FacebookTokenStrategy],
+  providers: [
+    AuthService, LocalStrategy, JwtStrategy, FacebookStrategy, GoogleStrategy, GoogleTokenStrategy, FacebookTokenStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}

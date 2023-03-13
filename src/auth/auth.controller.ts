@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpStatus, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { CurrentUser } from 'src/decorators';
+import { CurrentUser, Public } from 'src/decorators';
 import { Serialize } from 'src/interceptors';
 import { UserDto } from 'src/users/dtos';
 import { AuthService } from './auth.service';
@@ -8,6 +8,7 @@ import { SignupUserDto, SigninUserDto, Tokens } from './dtos';
 import { LocalAuthGuard, GoogleAuthGuard, GoogleTokenAuthGuard, FacebookAuthGuard, FacebookTokenAuthGuard } from './guards';
 
 @ApiTags('Authentication')
+@Public()
 @Controller('auth')
 export class AuthController {
     constructor(

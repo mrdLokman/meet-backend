@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards';
+import { AdminGuard } from 'src/auth/guards/admin.guard';
 import { Serialize } from 'src/interceptors';
 import { UserDto, CreateUserDto, UpdateUserDto } from './dtos';
 import { UsersService } from './users.service';
@@ -8,7 +9,7 @@ import { UsersService } from './users.service';
 @ApiTags('Users')
 @ApiBearerAuth()
 @Controller('users')
-@UseGuards(JwtAuthGuard)
+@UseGuards(AdminGuard)
 @Serialize(UserDto)
 export class UsersController {
 
@@ -17,12 +18,16 @@ export class UsersController {
     ) {}
 
     @Post('')
+    @ApiOperation({ summary: 'Create User require admin role' })
     @ApiCreatedResponse({
         description: 'User Created',
         type: UserDto,
     })
     @ApiUnauthorizedResponse({
-        description: 'Unauthorized(not loggedin or doesnt have right to access)'
+        description: 'Unauthorized(not loggedin)'
+    })
+    @ApiForbiddenResponse({
+        description: 'Unauthorized(not admin)'
     })
     @ApiBadRequestResponse({
         description: 'Payload incorrect'
@@ -32,12 +37,16 @@ export class UsersController {
     }
     
     @Get('/:id')
+    @ApiOperation({ summary: 'Get User by id require admin role' })
     @ApiOkResponse({
         description: 'User found',
         type: UserDto,
     })
     @ApiUnauthorizedResponse({
         description: 'Unauthorized(not loggedin or doesnt have right to access)'
+    })
+    @ApiForbiddenResponse({
+        description: 'Unauthorized(not admin)'
     })
     @ApiNotFoundResponse({
         description: 'User not found'
@@ -53,6 +62,7 @@ export class UsersController {
     }
 
     @Get('')
+    @ApiOperation({ summary: 'Gat all Users require admin role' })
     @ApiOkResponse({
         description: 'Get All Users',
         type: [UserDto],
@@ -60,17 +70,24 @@ export class UsersController {
     @ApiUnauthorizedResponse({
         description: 'Unauthorized(not loggedin or doesnt have right to access)'
     })
+    @ApiForbiddenResponse({
+        description: 'Unauthorized(not admin)'
+    })
     findAllUsers() {
         return this.usersService.findAll();
     }
 
     @Patch('/:id')
+    @ApiOperation({ summary: 'Update User by id require admin role' })
     @ApiOkResponse({
         description: 'User updated',
         type: UserDto,
     })
     @ApiUnauthorizedResponse({
         description: 'Unauthorized(not loggedin or doesnt have right to access)'
+    })
+    @ApiForbiddenResponse({
+        description: 'Unauthorized(not admin)'
     })
     @ApiNotFoundResponse({
         description: 'User not found'
@@ -84,12 +101,16 @@ export class UsersController {
 
 
     @Delete('/:id')
+    @ApiOperation({ summary: 'Delete User by id require admin role' })
     @ApiOkResponse({
         description: 'User deleted',
         type: UserDto,
     })
     @ApiUnauthorizedResponse({
         description: 'Unauthorized(not loggedin or doesnt have right to access)'
+    })
+    @ApiForbiddenResponse({
+        description: 'Unauthorized(not admin)'
     })
     @ApiNotFoundResponse({
         description: 'User not found'

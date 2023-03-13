@@ -6,10 +6,15 @@ export class UpdateUserDto {
     @ApiProperty()
     @IsString()
     @IsOptional()
-    password: string;
+    password?: string;
 
     @ApiProperty()
     @IsBoolean()
     @IsOptional()
-    isActive: boolean;
+    isActive?: boolean;
+
+    @ApiProperty()
+    @IsBoolean()
+    @IsOptional()
+    isAdmin?: boolean;
 }
