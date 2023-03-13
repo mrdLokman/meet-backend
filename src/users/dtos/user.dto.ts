@@ -11,12 +11,15 @@ export class UserDto {
   @Expose()
   source: string;
 
+  @Expose()
+  isActive: string;
+
+  @Expose()
+  isAdmin: string;
+
   @Exclude()
   password: string;
 
   @Exclude()
   email: string;
-
-  @Exclude()
-  isActive: string;
 }

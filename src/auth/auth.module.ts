@@ -22,7 +22,8 @@ import { FacebookTokenStrategy, GoogleTokenStrategy, FacebookStrategy, GoogleStr
     }),
     PassportModule.register({ defaultStrategy: 'facebook' })
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, FacebookStrategy, GoogleStrategy, GoogleTokenStrategy, FacebookTokenStrategy],
+  providers: [
+    AuthService, LocalStrategy, JwtStrategy, FacebookStrategy, GoogleStrategy, GoogleTokenStrategy, FacebookTokenStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}

@@ -5,7 +5,7 @@ export class SigninUserDto {
     @ApiProperty({description: 'User email',})
     @IsEmail()
     @IsString()
-    username: string;
+    email: string;
 
     @ApiProperty({description: 'User password',})
     @IsString()

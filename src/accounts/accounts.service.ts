@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { User } from 'src/users/user.entity';
+import { Equal, Repository } from 'typeorm';
 import { Account } from './account.entity';
 import { CreateAccountDto } from './dtos/create-account.dto';
 import { UpdateAccountDto } from './dtos/update-account.dto';
@@ -12,12 +13,13 @@ export class AccountsService {
         private readonly accountsRepository: Repository<Account>,
     ) {}
 
-    create(account: CreateAccountDto){
-        const userAccount = this.findOneByUserId(account.user.id);
+    async create(account: CreateAccountDto, user: User){
+        const userAccount = await this.findOneByUserId(user.id);
         if(userAccount){
             throw new BadRequestException('User already has an account!');
         }
         const newAccount = this.accountsRepository.create(account);
+        newAccount.user = user;
         return this.accountsRepository.save(newAccount);
     }
 
@@ -28,19 +30,24 @@ export class AccountsService {
         return this.accountsRepository.findOneBy({ id }); 
     }
 
-    findOneByUserId(userId: string) {
+    async findOneByUserId(userId: string) {
         if(!userId){
             return null;
         }
-        return this.accountsRepository.findOneBy({ user: {id: userId} }); 
+        return this.accountsRepository.findOne({
+            where: { user: Equal(userId) },
+            relations: ['user']
+          });
     }
     
     findAll() {
-        return this.accountsRepository.find();
+        return this.accountsRepository.find({
+            relations: ['user']
+        });
     }
 
-    async update(id: string, updates: UpdateAccountDto) {
-        const account = await this.findOneById(id);
+    async update(userId: string, updates: UpdateAccountDto) {
+        const account = await this.findOneByUserId(userId);
 
         if(!account){
             throw new NotFoundException('Account not found');
@@ -50,8 +57,8 @@ export class AccountsService {
         return this.accountsRepository.save(account);
     }
 
-    async delete(id: string) {
-        const account = await this.findOneById(id);
+    async delete(userId: string) {
+        const account = await this.findOneByUserId(userId);
 
         if(!account){
             throw new NotFoundException('Account not found');
