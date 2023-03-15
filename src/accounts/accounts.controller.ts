@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, NotFoundException, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { CurrentUser } from 'src/decorators';
@@ -59,7 +59,7 @@ export class AccountsController {
     })
     async getMyAccount(@CurrentUser() user) {
         const account = await this.accountsService.findOneByUserId(user.id);
-
+        
         if(!account){
             throw new NotFoundException('Account not fount');
         }
@@ -99,5 +99,40 @@ export class AccountsController {
     })
     deleteAccount(@CurrentUser() user) {
         return this.accountsService.delete(user.id);
+    }
+
+    @Get('add-intrest/:instrestId')
+    @ApiOperation({ summary: 'Update the authenticated user account (Add intrest to Account intrests' })
+    @ApiOkResponse({
+        description: 'Intrest Added',
+        type: AccountDto,
+    })
+    @ApiUnauthorizedResponse({
+        description: 'Unauthorized(not loggedin)'
+    })
+    @ApiNotFoundResponse({
+        description: 'Account not found / Intrest not found'
+    })
+    @ApiBadRequestResponse({
+        description: 'Payload incorrect'
+    })
+    addIntrestToAccount(@CurrentUser() user, @Param('instrestId') intrestId: string) {
+        return this.accountsService.addIntrestToAccount(user.id, intrestId);
+    }
+
+    @Get('remove-intrest/:instrestId')
+    @ApiOperation({ summary: 'Update the authenticated user account (Remove intrest from Account intrests' })
+    @ApiOkResponse({
+        description: 'Intrest Removed',
+        type: AccountDto,
+    })
+    @ApiUnauthorizedResponse({
+        description: 'Unauthorized(not loggedin)'
+    })
+    @ApiNotFoundResponse({
+        description: 'Account not found / Intrest not found'
+    })
+    removeIntrestFromAccount(@CurrentUser() user, @Param('instrestId') intrestId: string) {
+        return this.accountsService.removeIntrestFromAccount(user.id, intrestId);
     }
 }
