@@ -79,6 +79,13 @@ export class AccountsService {
             throw new NotFoundException('Account not found');
         }
 
+        if(updates.username){
+            const usernameAccount = await this.findOneByUserName(account.username);
+            if(usernameAccount){
+                throw new BadRequestException('Username already exists!');
+            }
+        }
+        
         if(updates.intrestIds){
             const intrests: Intrest[]= [];
             for(const intrestId of updates.intrestIds){
