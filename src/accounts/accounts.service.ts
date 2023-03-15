@@ -21,6 +21,11 @@ export class AccountsService {
         if(userAccount){
             throw new BadRequestException('User already has an account!');
         }
+        const usernameAccount = await this.findOneByUserName(account.username);
+        if(usernameAccount){
+            throw new BadRequestException('Username already exists!');
+        }
+
         const newAccount = this.accountsRepository.create(account);
         newAccount.user = user;
 
@@ -43,6 +48,14 @@ export class AccountsService {
         return this.accountsRepository.findOneBy({ id }); 
     }
 
+    findOneByUserName(username: string) {
+        if(!username){
+            return null;
+        }
+        return this.accountsRepository.findOneBy({ username }); 
+    }
+
+
     async findOneByUserId(userId: string) {
         if(!userId){
             return null;
@@ -52,7 +65,7 @@ export class AccountsService {
             relations: ['user', 'intrests']
         }); 
     }
-    
+
     findAll() {
         return this.accountsRepository.find({
             relations: ['user', 'intrests'],

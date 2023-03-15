@@ -13,7 +13,7 @@ export class Account {
   @JoinColumn()
   user: User;
 
-  @Column({ nullable: false })
+  @Column({ unique: true, nullable: false })
   username: string;
 
   @Column({ type: 'date' })
