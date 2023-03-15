@@ -19,4 +19,18 @@ export class AccountDto {
   @Transform(({obj}) => obj.user.id)
   @Expose()
   userId: number;
+
+  @ApiProperty()
+  @Transform(({obj}) => {
+    if(!obj.intrests){
+      return [];
+    }
+    const intrests: string[] = [];
+    for(const intrest of obj.intrests){
+      intrests.push(intrest.title);
+    }
+    return intrests;
+  })
+  @Expose()
+  intrests?: string[]
 }

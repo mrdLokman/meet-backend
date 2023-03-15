@@ -1,6 +1,7 @@
-import { Entity, Column, BeforeInsert, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, BeforeInsert, OneToOne, JoinColumn, JoinTable, ManyToMany } from 'typeorm';
 import { generateId } from 'src/utils';
 import { User } from 'src/users/user.entity';
+import { Intrest } from 'src/intrests/intrest.entity';
 
 @Entity()
 export class Account {
@@ -18,9 +19,12 @@ export class Account {
   @Column({ type: 'date' })
   birthDate?: string;
 
+  @ManyToMany(()=> Intrest, { eager: true })
+  @JoinTable()
+  intrests: Intrest[]
+
   @BeforeInsert()
   generateId() {
     this.id = generateId('Account');
   }
-
 }

@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guards';
 import { AdminGuard } from 'src/auth/guards/admin.guard';
 import { Serialize } from 'src/interceptors';
 import { UserDto, CreateUserDto, UpdateUserDto } from './dtos';

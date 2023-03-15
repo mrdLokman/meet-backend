@@ -1,16 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsDateString } from 'class-validator';
-import { User } from 'src/users/user.entity';
+import { IsString, IsOptional, IsDateString, IsNotEmpty, IsArray } from 'class-validator';
 
 export class CreateAccountDto {
     @ApiProperty()
     @IsString()
+    @IsNotEmpty()
     username: string;
 
     @ApiProperty()
     @IsDateString()
-    birthDate: string;
-
     @IsOptional()
-    user: User;
+    birthDate?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsArray()
+    intrestIds?: string[];
 }
