@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty } from 'class-validator';
 
 export class CreateIntrestDto {
-    @ApiProperty()
+    @ApiProperty({required: true})
     @IsString()
     @IsNotEmpty()
     title: string;

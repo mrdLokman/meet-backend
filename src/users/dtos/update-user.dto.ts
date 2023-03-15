@@ -3,17 +3,17 @@ import { IsString, IsBoolean, IsOptional } from 'class-validator';
 
 export class UpdateUserDto {
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     @IsString()
     @IsOptional()
     password?: string;
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     @IsBoolean()
     @IsOptional()
     isActive?: boolean;
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     @IsBoolean()
     @IsOptional()
     isAdmin?: boolean;
