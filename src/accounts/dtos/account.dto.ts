@@ -33,4 +33,7 @@ export class AccountDto {
   })
   @Expose()
   intrests?: string[]
+
+  @Expose()
+  purpose: string;
 }

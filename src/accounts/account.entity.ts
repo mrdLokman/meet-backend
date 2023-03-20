@@ -2,6 +2,7 @@ import { Entity, Column, BeforeInsert, OneToOne, JoinColumn, JoinTable, ManyToMa
 import { generateId } from 'src/utils';
 import { User } from 'src/users/user.entity';
 import { Intrest } from 'src/intrests/intrest.entity';
+import { PURPOSE } from './enums';
 
 @Entity()
 export class Account {
@@ -13,11 +14,14 @@ export class Account {
   @JoinColumn()
   user: User;
 
-  @Column({ unique: true, nullable: false })
+  @Column({ nullable: false })
   username: string;
 
   @Column({ type: 'date' })
   birthDate?: string;
+
+  @Column({ type: 'enum', enum: PURPOSE })
+  purpose?: PURPOSE;
 
   @ManyToMany(()=> Intrest, { eager: true })
   @JoinTable()
