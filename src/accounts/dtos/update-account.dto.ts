@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsDate, IsDateString, IsArray, IsEnum } from 'class-validator';
+import { IsString, IsOptional, IsDate, IsDateString, IsArray, IsEnum, IsNumber } from 'class-validator';
 import { PURPOSE } from '../enums';
 
 export class UpdateAccountDto {
@@ -40,4 +40,22 @@ export class UpdateAccountDto {
     @IsOptional()
     @IsEnum(PURPOSE)
     purpose?: PURPOSE;
+
+    @ApiProperty({
+        required: false,
+        description: 'The last registrated logitude',
+        example: 3.256481,
+    })
+    @IsNumber()
+    @IsOptional()
+    longitude: number;
+
+    @ApiProperty({
+        required: false,
+        description: 'The last registrated latitude',
+        example: 19.745812,
+    })
+    @IsNumber()
+    @IsOptional()
+    latitude: number;
 }
