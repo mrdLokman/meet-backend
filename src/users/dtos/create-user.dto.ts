@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsEmail, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsEmail, IsOptional, IsBoolean, IsEnum } from 'class-validator';
+import { UserSource } from '../enums';
 
 export class CreateUserDto {
     @ApiProperty({required: false})
@@ -18,9 +19,15 @@ export class CreateUserDto {
     @IsOptional()
     sourceUID?: string;
 
-    @ApiProperty({required: false})
-    @IsString()
-    source: string;
+    @ApiProperty({
+        required: false,
+        description: 'The source of this user',
+        enum: UserSource,
+        example: UserSource.FACEBOOK,
+    })
+    @IsOptional()
+    @IsEnum(UserSource)
+    source: UserSource;
 
     @ApiProperty({required: false})
     @IsBoolean()
