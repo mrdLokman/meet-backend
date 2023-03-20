@@ -17,10 +17,16 @@ export class Account {
   @Column({ nullable: false })
   username: string;
 
-  @Column({ type: 'date' })
+  @Column({ nullable: true, type: 'float' })
+  longitude: number;
+
+  @Column({ nullable: true, type: 'float' })
+  latitude: number;
+
+  @Column({ nullable: true, type: 'date' })
   birthDate?: string;
 
-  @Column({ type: 'enum', enum: PURPOSE })
+  @Column({ nullable: true, type: 'enum', enum: PURPOSE })
   purpose?: PURPOSE;
 
   @ManyToMany(()=> Intrest, { eager: true })

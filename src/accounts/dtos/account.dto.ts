@@ -1,6 +1,8 @@
 
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform } from 'class-transformer';
+import { IsEnum } from 'class-validator';
+import { PURPOSE } from '../enums';
 
 export class AccountDto {
   @ApiProperty()
@@ -34,6 +36,21 @@ export class AccountDto {
   @Expose()
   intrests?: string[]
 
+  @ApiProperty({
+    required: true,
+    description: 'The source of this user',
+    enum: PURPOSE,
+    example: PURPOSE.CHAT,
+  })
+  @IsEnum(PURPOSE)
   @Expose()
   purpose: string;
+
+  @ApiProperty()
+  @Expose()
+  longitude: number;
+
+  @ApiProperty()
+  @Expose()
+  latitude: number;
 }
